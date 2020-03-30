@@ -52,10 +52,10 @@ class GamePlatForm {
     this.generateFood();
     this.movePlayerToNewPosition();
     this.scoreTextComponent.text = "SCORE: " + this.frameNo;
-    this.scoreTextComponent.render();
-    if (this.popupComponent) {this.popupComponent.render();}
+    this.scoreTextComponent.render(this);
+    if (this.popupComponent) {this.popupComponent.render(this);}
     this.playerComponent.updatePos();
-    this.playerComponent.render();
+    this.playerComponent.render(this);
   }
 
   createComponentsPerInterval(n) {
@@ -112,14 +112,14 @@ class GamePlatForm {
   generateFood() {
     for (let i = 0; i < this.bonusScoreComponent.length; i++) {
       this.bonusScoreComponent[i].x -= Math.random() + 1;
-      this.bonusScoreComponent[i].render()
+      this.bonusScoreComponent[i].render(this)
     }
   }
 
   generateEnemies() {
     for (let i = 0; i < this.enemyComponents.length; i++) {
       this.enemyComponents[i].x -= Math.random() + 2;
-      this.enemyComponents[i].render();
+      this.enemyComponents[i].render(this);
     }
   }
 
@@ -141,7 +141,7 @@ class GameComponent {
     this.y = y;
   }
 
-  render() {
+  render(gamePlatform) {
     let ctx = gamePlatform.context;
     if (this.type === "popup" || this.type === "text") {
      this.setText(ctx);
@@ -201,17 +201,3 @@ class GameComponent {
   }
 }
 
-let gamePlatform = null;
-function startGame() {
-  gamePlatform = new GamePlatForm();
-  gamePlatform.start();
-}
-
-let bgColors = ["#ffb6b6", "#ccf0e1", "#f8dc88", "#fcf8f3", "#d4ebd0", "#856c8b", "#a4c5c6", "#faf4ff"]
-let bgIndex = 0;
-setInterval(function () {
-  document.body.style.cssText = "background-color: " + bgColors[bgIndex++];
-  if (!bgIndex || bgIndex >= bgColors.length) {
-    bgIndex = 0;
-  }
-}, 1000);

@@ -1,6 +1,7 @@
 akzara_game
 
-### A minimalistic game to calm a restless soul.
+### A minimalistic indie game to soothe restless souls in modern cities
+
 
 - A is for aware, of your surroundings
 - K is for kindle, the warmth in others.
@@ -12,7 +13,8 @@ akzara_game
 
 ### Instructions:
 1. Use arrow keys to move
-2. Enemies are green, avoid them
-3. Yellow things gives you bonus score, eat them
-4. Do not think about work whiling playing
-6. Relax.
+2. Obstacles are green, avoid them
+3. Yellow things gives you bonus score, eat them like they are your favorite deserts
+4. **Do not think about work whilst playing this game**
+6. **Do not think about work whilst playing this game**
+7. Go back to number 4.
