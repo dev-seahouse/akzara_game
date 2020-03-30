@@ -1,6 +1,6 @@
 akzara_game
 
-A simple runner game built to chill.
+A minimalistic game to calm a restless soul.
 
 - A is for aware, of your surroundings
 - K is for kindle, the warmth in others.
