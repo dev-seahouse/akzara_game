@@ -1,4 +1,40 @@
 let gamePiece = null;
+let enemies = [];
+let food = [];
+let score = null;
+let popup = null;
+
+const GamePlatform = {
+  canvas : document.createElement("canvas"),
+  start: function() {
+    this.canvas.width = 480;
+    this.canvas.height = 270;
+    this.context = this.canvas.getContext("2d");
+    this.frameNo = 0;
+    document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+    this.interval = setInterval(updatePlatform, 30);
+    window.addEventListener('keydown', function(e) {
+      GamePlatform.keys = (GamePlatform.keys|| [] );
+      GamePlatform.keys[e.keyCode] = true;
+    })
+    window.addEventListener('keyup', function(e) {
+      GamePlatform.keys[e.keyCode] = false;
+      gamePiece.stopMove();
+    })
+    window.addEventListener('touchmove',function(e) {
+      GamePlatform.x = e.touches[0].screenX;
+      GamePlatform.y = e.touches[0].screenY;
+    })
+  },
+  clear: function() {
+    this.context.clearRect(0,0 , this.canvas.width, this.canvas.height)
+  },
+  stop: function() {
+    clearInterval(this.interval);
+  }
+};
+
+
 
 class GameComponent {
   constructor(width, height, color, x, y, type) {
