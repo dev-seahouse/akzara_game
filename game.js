@@ -1,3 +1,4 @@
+let gamePiece = null;
 
 class GameComponent {
   constructor(width, height, color, x, y, type) {
@@ -10,4 +11,7 @@ class GameComponent {
     this.x = x;
     this.y = y;
   }
+}
+function startGame() {
+  gamePiece = new GameComponent(30, 30, "#f76a8c", 10, 120);
 }
