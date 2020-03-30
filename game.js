@@ -1,37 +1,36 @@
-let gamePiece = null;
-let enemies = [];
-let food = [];
-let score = null;
-let popup = null;
-let gamePlatform = null;
-
 class GamePlatForm {
-  constructor(gamePiece) {
+  constructor() {
     this.canvas = document.createElement("canvas");
     this.canvas.width = 480;
     this.canvas.height = 270;
     this.context = this.canvas.getContext("2d");
     this.frameNo = 0;
-    this.gamePiece = gamePiece;
+    this.playerComponent = new GameComponent(30, 30, "#f76a8c", 10, 120);
+    this.scoreTextComponent = new GameComponent("14px", "Open Sans", "#679b9b", 10, 20, "text");
+    this.enemyComponents = [];
+    this.bonusScoreComponent = [];
+    this.popupComponent = new GameComponent("12px", "Lato", "#fcf8f3", 100, 80, "popup");
   }
+
   start() {
     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
     // todo: make setinterval this reference calling object instead of window
-    this.interval = setInterval(this.update.bind(this), 25);
+    this.interval = setInterval(this.render.bind(this), 25);
     this.setListeners();
     this.x = 0;
     this.y = 0;
+    this.popupComponent.text = "";
   }
 
   setListeners() {
     const _this = this;
     window.addEventListener('keydown', function (e) {
-      window.keys = (window.keys || []);
-      window.keys[e.keyCode] = true;
+      _this.keys = (_this.keys || []);
+      _this.keys[e.keyCode] = true;
     });
     window.addEventListener('keyup', function (e) {
-      window.keys[e.keyCode] = false;
-      _this.gamePiece.stopMove();
+      _this.keys[e.keyCode] = false;
+      _this.playerComponent.stopMove();
     });
   }
 
@@ -43,83 +42,89 @@ class GamePlatForm {
     clearInterval(this.interval);
   }
 
-  update() {
-    for (let i = 0; i < enemies.length; i++) {
-
-      if (this.gamePiece.hasCollidedWith(enemies[i])) {
-        this.stop();
-        alert("<= It is not a game over. It is a fresh beginning. =>");
-        return;
-      }
-
-    }
-
-    for (let i = 0; i < food.length; i++) {
-      if (this.gamePiece.hasCollidedWith(food[i])) {
-        popup.x = food[i].x + 15;
-        popup.y = food[i].y + 10;
-        food.splice(i, 1);
-        popup.text = "+ Bonus:" + "100";
-
-        this.frameNo += 100;
-        setTimeout(function () {
-          popup.text = "";
-        }, 2000)
-      }
-    }
-
-    if (this.x && this.y) {
-      this.gamePiece.x = this.x;
-      this.gamePiece.y = this.y;
-    }
-
-    this.clear();
+  render() {
     this.frameNo++;
+    this.handleCollidedWithEnemies();
+    this.handleCollidedWithBonus();
+    this.clear();
+    this.createComponentsPerInterval(50);
+    this.generateEnemies();
+    this.generateFood();
+    this.movePlayerToNewPosition();
+    this.scoreTextComponent.text = "SCORE: " + this.frameNo;
+    this.scoreTextComponent.render();
+    if (this.popupComponent) {this.popupComponent.render();}
+    this.playerComponent.updatePos();
+    this.playerComponent.render();
+  }
 
-    if (this.frameNo == 1 || this.isInterval(50)) {
+  createComponentsPerInterval(n) {
+    if (this.frameNo === 1 || this.isInterval(50)) {
       let newComponentX = this.canvas.width;
       let maxHeight = this.canvas.height - 10;
       let minHeight = 10;
 
-      enemies.push(new GameComponent(10, 10, "#679b9b", newComponentX, Math.floor((Math.random() * maxHeight) + minHeight)));
-      food.push(new GameComponent(10, 10, "#f8fab8", newComponentX, Math.floor((Math.random() * maxHeight) + minHeight)))
+      this.enemyComponents.push(new GameComponent(10, 10, "#679b9b", newComponentX, Math.floor((Math.random() * maxHeight) + minHeight)));
+      this.bonusScoreComponent.push(new GameComponent(10, 10, "#f8fab8", newComponentX, Math.floor((Math.random() * maxHeight) + minHeight)))
     }
+  }
 
-    for (let i = 0; i < enemies.length; i++) {
-      enemies[i].x -= Math.random() + 2;
-      enemies[i].render();
+  handleCollidedWithBonus() {
+    let _this = this;
+    for (let i = 0; i < this.bonusScoreComponent.length; i++) {
+      if (this.playerComponent.hasCollidedWith(this.bonusScoreComponent[i])) {
+        this.popupComponent.x = this.bonusScoreComponent[i].x + 15;
+        this.popupComponent.y = this.bonusScoreComponent[i].y + 10;
+        this.bonusScoreComponent.splice(i, 1);
+        this.popupComponent.text = "+ Bonus:" + "100";
+        this.frameNo += 100;
+        setTimeout(function () {
+          _this.popupComponent.text = "";
+        }, 2000)
+      }
     }
+  }
 
-    for (let i = 0; i < food.length; i++) {
-      food[i].x -= Math.random() + 1;
-      food[i].render()
+  handleCollidedWithEnemies() {
+    for (let i = 0; i < this.enemyComponents.length; i++) {
+      if (this.playerComponent.hasCollidedWith(this.enemyComponents[i])) {
+        this.stop();
+        alert("<= It is not a game over. It is a fresh beginning. =>");
+      }
     }
+  }
 
-    if (window.keys && window.keys[37]) {
-      this.gamePiece.moveLeft();
+  movePlayerToNewPosition() {
+    if (this.keys && this.keys[37]) {
+      this.playerComponent.moveLeft();
     }
-    if (window.keys && window.keys[39]) {
-      this.gamePiece.moveRight();
+    if (this.keys && this.keys[39]) {
+      this.playerComponent.moveRight();
     }
-    if (window.keys && window.keys[38]) {
-      this.gamePiece.moveUp();
+    if (this.keys && this.keys[38]) {
+      this.playerComponent.moveUp();
     }
-    if (window.keys && window.keys[40]) {
-      this.gamePiece.moveDown();
+    if (this.keys && this.keys[40]) {
+      this.playerComponent.moveDown();
     }
+  }
 
-    score.text = "SCORE: " + this.frameNo;
-    score.render();
-    if (popup) {
-      popup.render();
+  generateFood() {
+    for (let i = 0; i < this.bonusScoreComponent.length; i++) {
+      this.bonusScoreComponent[i].x -= Math.random() + 1;
+      this.bonusScoreComponent[i].render()
     }
-    this.gamePiece.updatePos();
-    this.gamePiece.render();
+  }
+
+  generateEnemies() {
+    for (let i = 0; i < this.enemyComponents.length; i++) {
+      this.enemyComponents[i].x -= Math.random() + 2;
+      this.enemyComponents[i].render();
+    }
   }
 
   isInterval(n) {
-    if ((this.frameNo / n) % 1 == 0) return true;
-    return false;
+    return (this.frameNo / n) % 1 === 0;
   }
 }
 
@@ -138,18 +143,22 @@ class GameComponent {
 
   render() {
     let ctx = gamePlatform.context;
-    if (this.type === "popup") {
-      ctx.font = this.width + " " + this.height;
-      ctx.fillStyle = this.color;
-      ctx.fillText(this.text, this.x, this.y);
-    } else if (this.type === "text") {
-      ctx.font = this.width + " " + this.height;
-      ctx.fillStyle = this.color;
-      ctx.fillText(this.text, this.x, this.y);
+    if (this.type === "popup" || this.type === "text") {
+     this.setText(ctx);
     } else {
-      ctx.fillStyle = this.color;
-      ctx.fillRect(this.x, this.y, this.width, this.height);
+      this.drawRect(ctx);
     }
+  }
+
+  drawRect(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }
+
+  setText(ctx) {
+    ctx.font = this.width + " " + this.height;
+    ctx.fillStyle = this.color;
+    ctx.fillText(this.text, this.x, this.y);
   }
 
   updatePos() {
@@ -167,14 +176,7 @@ class GameComponent {
     let otherRight = otherObj.x + (otherObj.width);
     let otherTop = otherObj.y;
     let otherBottom = otherObj.y + otherObj.height;
-    let crash = true;
-    if (bottom < otherTop ||
-      top > otherBottom ||
-      right < otherLeft ||
-      left > otherRight) {
-      crash = false;
-    }
-    return crash;
+    return !(bottom < otherTop || top > otherBottom || right < otherLeft || left > otherRight);
   }
 
   moveUp() {
@@ -197,16 +199,11 @@ class GameComponent {
     this.velocityX = 0;
     this.velocityY = 0;
   }
-
 }
 
-
+let gamePlatform = null;
 function startGame() {
-  gamePiece = new GameComponent(30, 30, "#f76a8c", 10, 120);
-  gamePlatform = new GamePlatForm(gamePiece);
-  score = new GameComponent("14px", "Open Sans", "#679b9b", 10, 20, "text");
-  popup = new GameComponent("12px", "Lato", "#fcf8f3", 100, 80, "popup");
-  popup.text = "";
+  gamePlatform = new GamePlatForm();
   gamePlatform.start();
 }
 
