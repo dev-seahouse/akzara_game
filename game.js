@@ -1,25 +1,42 @@
+const STARTED = 0;
+const PAUSED = 1;
+const ENDED = 2;
 class GamePlatForm {
   constructor() {
     this.canvas = document.createElement("canvas");
-    this.canvas.width = 480;
-    this.canvas.height = 270;
-    this.context = this.canvas.getContext("2d");
-    this.frameNo = 0;
-    this.playerComponent = new GameComponent(30, 30, "#f76a8c", 10, 120);
-    this.scoreTextComponent = new GameComponent("14px", "Open Sans", "#679b9b", 10, 20, "text");
-    this.enemyComponents = [];
-    this.bonusScoreComponent = [];
-    this.popupComponent = new GameComponent("12px", "Lato", "#fcf8f3", 100, 80, "popup");
+    this.canvas.width = 520;
+    this.canvas.height = 310;
+    this.gameStatus = ENDED; // 0 = ended, 1 = paused, 2 = ended
   }
 
   start() {
-    document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-    // todo: make setinterval this reference calling object instead of window
+    this.context = this.canvas.getContext("2d");
+    this.playerComponent = new GameComponent(30, 30, "#f76a8c", 10, 120);
+    this.scoreTextComponent = new GameComponent("11px", "Nunito", "#679b9b", 11, 21, "text");
+    this.popupComponent = new GameComponent("12px", "Nunito", "#fcf8f3", 100, 80, "popup");
+    this.enemyComponents = [];
+    this.bonusScoreComponent = [];
+    let gameContainer = document.getElementById('gameContainer');
+    gameContainer.insertBefore(this.canvas, gameContainer.children[0]);
     this.interval = setInterval(this.render.bind(this), 25);
     this.setListeners();
     this.x = 0;
     this.y = 0;
     this.popupComponent.text = "";
+    this.frameNo = 0;
+    this.gameStatus = STARTED;
+  }
+
+  isGamePaused () {
+    return this.gameStatus === PAUSED;
+  }
+
+  isGameStarted() {
+    return this.gameStatus === STARTED;
+  }
+
+  isGameEnded () {
+    return this.gameStatus === ENDED;
   }
 
   setListeners() {
@@ -40,9 +57,16 @@ class GamePlatForm {
 
   stop() {
     clearInterval(this.interval);
+    this.interval = null;
+    this.gameStatus = PAUSED;
   }
 
-  render() {
+  resume() {
+    this.interval =  setInterval(this.render.bind(this), 25);
+    this.gameStatus = STARTED;
+  }
+
+ render() {
     this.frameNo++;
     this.handleCollidedWithEnemies();
     this.handleCollidedWithBonus();
@@ -53,7 +77,9 @@ class GamePlatForm {
     this.movePlayerToNewPosition();
     this.scoreTextComponent.text = "SCORE: " + this.frameNo;
     this.scoreTextComponent.render(this);
-    if (this.popupComponent) {this.popupComponent.render(this);}
+    if (this.popupComponent) {
+      this.popupComponent.render(this);
+    }
     this.playerComponent.updatePos();
     this.playerComponent.render(this);
   }
@@ -88,8 +114,9 @@ class GamePlatForm {
   handleCollidedWithEnemies() {
     for (let i = 0; i < this.enemyComponents.length; i++) {
       if (this.playerComponent.hasCollidedWith(this.enemyComponents[i])) {
+        this.gameStatus = ENDED;
         this.stop();
-        alert("<= It is not a game over. It is a fresh beginning. =>");
+        // alert("<= It is not a game over. It is a fresh beginning. =>");
       }
     }
   }
@@ -128,7 +155,6 @@ class GamePlatForm {
   }
 }
 
-
 class GameComponent {
   constructor(width, height, color, x, y, type) {
     this.color = color;
@@ -144,7 +170,7 @@ class GameComponent {
   render(gamePlatform) {
     let ctx = gamePlatform.context;
     if (this.type === "popup" || this.type === "text") {
-     this.setText(ctx);
+      this.setText(ctx);
     } else {
       this.drawRect(ctx);
     }
