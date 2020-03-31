@@ -8,7 +8,7 @@ class GameSave {
     this.saveObjsArr = this.retrieveStorage() || this.createNewStorage();
   }
 
-  createNewStorage(){
+  createNewStorage() {
     // todo: let user store name and add multiple high scores
     const save = [{
       highScores: []
@@ -36,7 +36,7 @@ class GameSave {
     let saveObj = this.saveObjsArr[0];
     let highScores = saveObj.highScores;
     highScores.push(newScore);
-    highScores.sort((a,b) => b-a);// sort array in place
+    highScores.sort((a, b) => b - a);// sort array in place
     this.cleanHighScoresArr(highScores, 10);
     saveObj.highScores = highScores;
     window.localStorage.setItem(SAVE_OBJ_NAME, JSON.stringify(this.saveObjsArr));
@@ -80,7 +80,7 @@ class GamePlatForm {
     this.gameStatus = STARTED;
   }
 
-  isGamePaused () {
+  isGamePaused() {
     return this.gameStatus === PAUSED;
   }
 
@@ -88,7 +88,7 @@ class GamePlatForm {
     return this.gameStatus === STARTED;
   }
 
-  isGameEnded () {
+  isGameEnded() {
     return this.gameStatus === ENDED;
   }
 
@@ -115,11 +115,11 @@ class GamePlatForm {
   }
 
   resume() {
-    this.interval =  setInterval(this.render.bind(this), 30);
+    this.interval = setInterval(this.render.bind(this), 30);
     this.gameStatus = STARTED;
   }
 
- render() {
+  render() {
     this.frameNo++;
     this.handleCollidedWithEnemies();
     this.handleCollidedWithBonus();
@@ -178,17 +178,17 @@ class GamePlatForm {
   }
 
   movePlayerToNewPosition() {
-    if (this.keys && this.keys[37]  && this.playerComponent.x - this.playerComponent.velocityX > 5  ) {
+    if (this.keys && this.keys[37] && this.playerComponent.x - this.playerComponent.velocityX > 5) {
       this.playerComponent.moveLeft();
     }
-    if (this.keys && this.keys[39] && this.playerComponent.x + this.playerComponent.width + this.playerComponent.velocityX < this.canvas.width -5 ) {
+    if (this.keys && this.keys[39] && this.playerComponent.x + this.playerComponent.width + this.playerComponent.velocityX < this.canvas.width - 5) {
       this.playerComponent.moveRight();
     }
-    if (this.keys && this.keys[38] && this.playerComponent.y - this.playerComponent.velocityY > 5 ) {
+    if (this.keys && this.keys[38] && this.playerComponent.y - this.playerComponent.velocityY > 5) {
       this.playerComponent.moveUp();
     }
-    if (this.keys && this.keys[40] && this.playerComponent.y + this.playerComponent.height+ this.playerComponent.velocityY < this.canvas.height - 5)  {
-      console.log("player y is: " +this.playerComponent.y);
+    if (this.keys && this.keys[40] && this.playerComponent.y + this.playerComponent.height + this.playerComponent.velocityY < this.canvas.height - 5) {
+      console.log("player y is: " + this.playerComponent.y);
       console.log("canvas height is: " + this.canvas.height);
       this.playerComponent.moveDown();
     }
@@ -273,7 +273,7 @@ class GameComponent {
   }
 
   moveLeft() {
-    this.velocityX -=0.5;
+    this.velocityX -= 0.5;
   }
 
   moveRight() {

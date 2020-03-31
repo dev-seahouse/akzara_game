@@ -48,7 +48,7 @@ class RadioPlayer {
   }
 
   setStation(index = 0) {
-    isNaN(index)?index = 0 :index;
+    isNaN(index) ? index = 0 : index;
     let radioSource = this.stations[index].src;
     this.nowPlaying = new Howl({
       src: radioSource,
@@ -77,7 +77,7 @@ class RadioPlayer {
     this.playing = true;
   }
 
-  isPlaying(){
+  isPlaying() {
     return this.playing;
   }
 
@@ -100,7 +100,7 @@ class RadioPlayer {
 
     this.nowPlaying.stop();
 
-    if (this.currentStationIndex === this.stations.length -1) {
+    if (this.currentStationIndex === this.stations.length - 1) {
       this.currentStationIndex = 0;
     } else {
       this.currentStationIndex++;
@@ -111,11 +111,11 @@ class RadioPlayer {
     }
   }
 
-  playPrevious(){
+  playPrevious() {
     this.nowPlaying.stop();
     if (this.currentStationIndex === 0) {
-      this.currentStationIndex = this.stations.length-1
-    }else {
+      this.currentStationIndex = this.stations.length - 1
+    } else {
       this.currentStationIndex--;
     }
     this.setStation(this.currentStationIndex);
