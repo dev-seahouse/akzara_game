@@ -53,6 +53,7 @@ class RadioPlayer {
     this.nowPlaying = new Howl({
       src: radioSource,
       html5: true,
+      volume: 0.5,
       format: ['mp3', 'aac']
     });
     this.nowPlayingTitle = this.stations[index].station;

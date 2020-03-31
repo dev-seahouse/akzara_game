@@ -28,7 +28,7 @@ class GameSave {
   // keep top n of scores only
   cleanHighScoresArr(arr, n) {
     if (arr.length > n) {
-      arr.splice(0,n);
+      arr.splice(n);
     }
   }
 

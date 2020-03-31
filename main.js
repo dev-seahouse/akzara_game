@@ -72,20 +72,26 @@ updateHighScoreBoard();
 
 const clearOverLay = () => {
   gameContainer.style.filter = "";
-  overlay.style.display = "none";
+  overlay.style.animation = "shrink .8s";
+  overlay.style.visibility = "hidden";
+  overlay.style.opacity = "0";
 };
 
 const showOverLay = function () {
+  overlay.style.animation = "grow .8s";
   this.style.filter = "blur(8px)";
-  overlay.style.display = "flex";
+  overlay.style.visibility = "visible";
+  overlay.style.opacity = ".8";
+  // overlay.style.display = "flex";
 };
 
-gameContainer.addEventListener('mouseout', function (e) {
+gameContainer.addEventListener('mouseleave', function (e) {
   showOverLay.call(this);
   if (gamePlatform && gamePlatform.isGameStarted()) {
     gamePlatform.stop();
   }
 });
+
 
 gameContainer.addEventListener('hasGameEnded', function (e) {
   updateHighScoreBoard();
@@ -104,7 +110,6 @@ resumeBtn.addEventListener('click', function (e) {
 
 newGameBtn.addEventListener('click', function (e) {
   e.preventDefault();
-  updateHighScoreBoard();
   clearOverLay();
   if (gamePlatform) {
     setTimeout(function () {
