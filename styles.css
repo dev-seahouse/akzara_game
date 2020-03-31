@@ -130,7 +130,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(#FFB6B6, #be79df) no-repeat;
+  background: radial-gradient(#ffa34d, #1eb2a6) no-repeat;
   /* background-color:  rgba(0,0,0,0.6); */
   opacity: .8;
   z-index: 1;
@@ -154,7 +154,7 @@ canvas {
    ========================================================================== */
 
 .nav {
-  background: #679b9b ;
+  background: #f67575;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -200,13 +200,14 @@ canvas {
 
 .score-board>.title {
   background: rgba(255, 229, 229, .1);
-  padding: 6px 22px;
+  padding: 6px 60px;
   margin-bottom: 1rem;
   border-radius: 2px;
   letter-spacing: 3px;
+  font-style: italic;
   text-decoration: underline;
   text-shadow: 1px 1px 1px #aacfcf,
-             1px 1px 1px #aacfcf;
+             2px 2px 2px #1eb2a6;
 }
 
 .high-scores {
@@ -222,9 +223,11 @@ canvas {
 
 .high-scores li {
   font-size: 1rem;
-  margin-bottom: 10px;
-  line-height: 1.6;
+  margin-bottom: 1rem;
+  line-height: 1.3;
   margin-left: 35px;
+  color: #f4eeff ;
+
 }
 
 

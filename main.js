@@ -1,4 +1,5 @@
 const gamePlatform = new GamePlatForm();
+const gameSave = new GameSave();
 /*
  *  Radio
  */
@@ -62,10 +63,11 @@ const clearOverLay = () => {
   overlay.style.display = "none";
 };
 
-function showOverLay() {
+
+const showOverLay = function () {
   this.style.filter = "blur(8px)";
   overlay.style.display = "flex";
-}
+};
 
 gameContainer.addEventListener('mouseout', function (e) {
   showOverLay.call(this);
@@ -108,9 +110,3 @@ setInterval(function () {
     bgIndex = 0;
   }
 }, 1400);
-
-
-/*
- *  Client
- */
-

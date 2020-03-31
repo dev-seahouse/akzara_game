@@ -1,8 +1,42 @@
 const STARTED = 0;
 const PAUSED = 1;
 const ENDED = 2;
+const SAVE_OBJ_NAME = "save";
+
+class GameSave {
+  constructor() {
+    this.saveObj = this.retrieveStorage() || this.createNewStorage();
+  }
+
+  createNewStorage(){
+    // todo: let user store name and add multiple high scores
+    const save = [{
+      highScores: []
+    }];
+    window.localStorage.setItem(SAVE_OBJ_NAME, JSON.stringify(save));
+    return save;
+  }
+
+  retrieveStorage() {
+    return JSON.parse(window.localStorage.getItem(SAVE_OBJ_NAME));
+  }
+
+  getHighScores() {
+    return this.saveObj[0].highScores;
+  }
+
+  updateHighScore(newScore) {
+    let highScores = this.saveObj[0].highScores;
+    highScores.push(newScore);
+    highScores.sort((a,b) => b-a);// sort array in place
+    window.localStorage.setItem(SAVE_OBJ_NAME, JSON.stringify(this.saveObj));
+  }
+
+}
+
 class GamePlatForm {
   constructor() {
+    this.save = new GameSave();
     this.canvas = document.createElement("canvas");
     this.canvas.width = 520;
     this.canvas.height = 310;
@@ -117,6 +151,7 @@ class GamePlatForm {
         this.gameStatus = ENDED;
         this.stop();
         const gameEndedEvent = new Event('hasGameEnded');
+        this.save.updateHighScore(this.frameNo);
         document.getElementById('gameContainer').dispatchEvent(gameEndedEvent);
         // alert("<= It is not a game over. It is a fresh beginning. =>");
       }
