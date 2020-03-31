@@ -7,17 +7,17 @@ class GamePlatForm {
     this.canvas.width = 520;
     this.canvas.height = 310;
     this.gameStatus = ENDED; // 0 = ended, 1 = paused, 2 = ended
-  }
-
-  start() {
     this.context = this.canvas.getContext("2d");
     this.playerComponent = new GameComponent(30, 30, "#f76a8c", 10, 120);
     this.scoreTextComponent = new GameComponent("11px", "Nunito", "#679b9b", 11, 21, "text");
     this.popupComponent = new GameComponent("12px", "Nunito", "#fcf8f3", 100, 80, "popup");
-    this.enemyComponents = [];
-    this.bonusScoreComponent = [];
+  }
+
+  start() {
     let gameContainer = document.getElementById('gameContainer');
     gameContainer.insertBefore(this.canvas, gameContainer.children[0]);
+    this.enemyComponents = [];
+    this.bonusScoreComponent = [];
     this.interval = setInterval(this.render.bind(this), 25);
     this.setListeners();
     this.x = 0;
@@ -116,6 +116,8 @@ class GamePlatForm {
       if (this.playerComponent.hasCollidedWith(this.enemyComponents[i])) {
         this.gameStatus = ENDED;
         this.stop();
+        const gameEndedEvent = new Event('hasGameEnded');
+        document.getElementById('gameContainer').dispatchEvent(gameEndedEvent);
         // alert("<= It is not a game over. It is a fresh beginning. =>");
       }
     }

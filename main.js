@@ -14,10 +14,10 @@ const newGameBtn = document.getElementById('newGameBtn');
 const resumeBtn = document.getElementById('resumeBtn');
 
 playBtn.addEventListener('click', function () {
-  if(radioPlayer.isPlaying()) {
+  if (radioPlayer.isPlaying()) {
     radioPlayer.stop();
     playBtn.innerHTML = "<i class=\"fad fa-play\"></i>"
-  }else {
+  } else {
     radioPlayer.play();
     playBtn.innerHTML = "<i class=\"fad fa-stop\"></i>"
   }
@@ -33,15 +33,15 @@ muteBtn.addEventListener('click', function () {
   }
 });
 
-nextBtn.addEventListener('click',function () {
+nextBtn.addEventListener('click', function () {
   radioPlayer.playNext();
-  nowPlayingElem.textContent = "Now Listening: "+ radioPlayer.getStationTitle();
+  nowPlayingElem.textContent = "Now Listening: " + radioPlayer.getStationTitle();
   musicTypeElem.textContent = "Genre: " + radioPlayer.getStationType();
 });
 
 prevBtn.addEventListener('click', function () {
   radioPlayer.playPrevious();
-  nowPlayingElem.textContent = "Now Listening: "+ radioPlayer.getStationTitle();
+  nowPlayingElem.textContent = "Now Listening: " + radioPlayer.getStationTitle();
   musicTypeElem.textContent = "Genre: " + radioPlayer.getStationType();
 
 });
@@ -50,7 +50,7 @@ prevBtn.addEventListener('click', function () {
 let radioPlayer = new RadioPlayer(stations);
 radioPlayer.setStation(0);
 
-nowPlayingElem.textContent = "Now Listening: "+ radioPlayer.getStationTitle();
+nowPlayingElem.textContent = "Now Listening: " + radioPlayer.getStationTitle();
 musicTypeElem.textContent = "Genre: " + radioPlayer.getStationType();
 
 /*
@@ -62,35 +62,45 @@ const clearOverLay = () => {
   overlay.style.display = "none";
 };
 
-gameContainer.addEventListener('mouseout',function (e) {
+function showOverLay() {
   this.style.filter = "blur(8px)";
   overlay.style.display = "flex";
+}
+
+gameContainer.addEventListener('mouseout', function (e) {
+  showOverLay.call(this);
   if (gamePlatform && gamePlatform.isGameStarted()) {
     gamePlatform.stop();
   }
 });
 
+gameContainer.addEventListener('hasGameEnded', function (e) {
+  showOverLay.call(this);
+});
+
 resumeBtn.addEventListener('click', function (e) {
   e.preventDefault();
   clearOverLay();
-  setTimeout(function () {
-    gamePlatform.resume();
-  }, 1500)
+  if (gamePlatform && gamePlatform.isGamePaused()) {
+    setTimeout(function () {
+      gamePlatform.resume();
+    }, 1000)
+  }
 });
 
-
-newGameBtn.addEventListener('click', function(e) {
+newGameBtn.addEventListener('click', function (e) {
   e.preventDefault();
   clearOverLay();
-  gamePlatform.start();
-  setTimeout(function () {
-  },1500);
+  if (gamePlatform) {
+    setTimeout(function () {
+      gamePlatform.start();
+    }, 1000);
+  }
 });
-
 
 // Background color breathe effect
 let bgColors = ["#ffb6b6", "#ccf0e1", "#f8dc88", "#fcf8f3", "#d4ebd0",
-"#856c8b", "#a4c5c6", "#faf4ff", "beebe9", "f4eeff"];
+  "#856c8b", "#a4c5c6", "#faf4ff", "beebe9", "f4eeff"];
 let bgIndex = 0;
 setInterval(function () {
   document.body.style.cssText = "background-color: " + bgColors[bgIndex++];
@@ -98,8 +108,6 @@ setInterval(function () {
     bgIndex = 0;
   }
 }, 1400);
-
-// On mouse out pause game and display menu
 
 
 /*
