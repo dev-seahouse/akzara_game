@@ -71,7 +71,7 @@ class GamePlatForm {
     this.clear();
     this.enemyComponents = [];
     this.bonusScoreComponent = [];
-    this.interval = setInterval(this.render.bind(this), 25);
+    this.interval = setInterval(this.render.bind(this), 30);
     this.setListeners();
     this.x = 0;
     this.y = 0;
@@ -115,7 +115,7 @@ class GamePlatForm {
   }
 
   resume() {
-    this.interval =  setInterval(this.render.bind(this), 25);
+    this.interval =  setInterval(this.render.bind(this), 30);
     this.gameStatus = STARTED;
   }
 
@@ -178,19 +178,22 @@ class GamePlatForm {
   }
 
   movePlayerToNewPosition() {
-    if (this.keys && this.keys[37]) {
+    if (this.keys && this.keys[37]  && this.playerComponent.x - this.playerComponent.velocityX > 5  ) {
       this.playerComponent.moveLeft();
     }
-    if (this.keys && this.keys[39]) {
+    if (this.keys && this.keys[39] && this.playerComponent.x + this.playerComponent.width + this.playerComponent.velocityX < this.canvas.width -5 ) {
       this.playerComponent.moveRight();
     }
-    if (this.keys && this.keys[38]) {
+    if (this.keys && this.keys[38] && this.playerComponent.y - this.playerComponent.velocityY > 5 ) {
       this.playerComponent.moveUp();
     }
-    if (this.keys && this.keys[40]) {
+    if (this.keys && this.keys[40] && this.playerComponent.y + this.playerComponent.height+ this.playerComponent.velocityY < this.canvas.height - 5)  {
+      console.log("player y is: " +this.playerComponent.y);
+      console.log("canvas height is: " + this.canvas.height);
       this.playerComponent.moveDown();
     }
   }
+
 
   generateFood() {
     for (let i = 0; i < this.bonusScoreComponent.length; i++) {
@@ -270,7 +273,7 @@ class GameComponent {
   }
 
   moveLeft() {
-    this.velocityX -= 0.5;
+    this.velocityX -=0.5;
   }
 
   moveRight() {

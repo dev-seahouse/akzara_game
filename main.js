@@ -13,6 +13,7 @@ const prevBtn = document.getElementById('prevBtn');
 const overlay = document.getElementById('overlay');
 const newGameBtn = document.getElementById('newGameBtn');
 const resumeBtn = document.getElementById('resumeBtn');
+const stopRadioBtn = document.getElementById('stopRadio');
 
 playBtn.addEventListener('click', function () {
   if (radioPlayer.isPlaying()) {
@@ -116,6 +117,12 @@ newGameBtn.addEventListener('click', function (e) {
       gamePlatform.start();
     }, 1000);
   }
+});
+
+stopRadioBtn.addEventListener('click', function (e) {
+  e.preventDefault();
+  radioPlayer.stop();
+  playBtn.innerHTML = "<i class=\"fad fa-play\"></i>"
 });
 
 // Background color breathe effect
