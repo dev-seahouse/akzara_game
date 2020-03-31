@@ -1,5 +1,5 @@
 const gamePlatform = new GamePlatForm();
-const gameSave = new GameSave();
+const gameSave = gamePlatform.getGameSave();
 /*
  *  Radio
  */
@@ -47,7 +47,6 @@ prevBtn.addEventListener('click', function () {
 
 });
 
-
 let radioPlayer = new RadioPlayer(stations);
 radioPlayer.setStation(0);
 
@@ -58,11 +57,23 @@ musicTypeElem.textContent = "Genre: " + radioPlayer.getStationType();
  * UI
  */
 
+function updateHighScoreBoard() {
+  const highScoresOLElement = document.getElementById('highScoresList');
+  highScoresOLElement.innerHTML = "";
+  const highScoreArr = gameSave.getHighScores();
+  highScoreArr.forEach(score => {
+    let listItem = document.createElement("li");
+    listItem.textContent = score;
+    highScoresOLElement.appendChild(listItem);
+  });
+}
+
+updateHighScoreBoard();
+
 const clearOverLay = () => {
   gameContainer.style.filter = "";
   overlay.style.display = "none";
 };
-
 
 const showOverLay = function () {
   this.style.filter = "blur(8px)";
@@ -77,6 +88,7 @@ gameContainer.addEventListener('mouseout', function (e) {
 });
 
 gameContainer.addEventListener('hasGameEnded', function (e) {
+  updateHighScoreBoard();
   showOverLay.call(this);
 });
 
@@ -92,6 +104,7 @@ resumeBtn.addEventListener('click', function (e) {
 
 newGameBtn.addEventListener('click', function (e) {
   e.preventDefault();
+  updateHighScoreBoard();
   clearOverLay();
   if (gamePlatform) {
     setTimeout(function () {

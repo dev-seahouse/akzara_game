@@ -5,7 +5,7 @@ const SAVE_OBJ_NAME = "save";
 
 class GameSave {
   constructor() {
-    this.saveObj = this.retrieveStorage() || this.createNewStorage();
+    this.saveObjsArr = this.retrieveStorage() || this.createNewStorage();
   }
 
   createNewStorage(){
@@ -22,14 +22,24 @@ class GameSave {
   }
 
   getHighScores() {
-    return this.saveObj[0].highScores;
+    return this.saveObjsArr[0].highScores;
+  }
+
+  // keep top n of scores only
+  cleanHighScoresArr(arr, n) {
+    if (arr.length > n) {
+      arr.splice(0,n);
+    }
   }
 
   updateHighScore(newScore) {
-    let highScores = this.saveObj[0].highScores;
+    let saveObj = this.saveObjsArr[0];
+    let highScores = saveObj.highScores;
     highScores.push(newScore);
     highScores.sort((a,b) => b-a);// sort array in place
-    window.localStorage.setItem(SAVE_OBJ_NAME, JSON.stringify(this.saveObj));
+    this.cleanHighScoresArr(highScores, 10);
+    saveObj.highScores = highScores;
+    window.localStorage.setItem(SAVE_OBJ_NAME, JSON.stringify(this.saveObjsArr));
   }
 
 }
@@ -45,11 +55,20 @@ class GamePlatForm {
     this.playerComponent = new GameComponent(30, 30, "#f76a8c", 10, 120);
     this.scoreTextComponent = new GameComponent("11px", "Nunito", "#679b9b", 11, 21, "text");
     this.popupComponent = new GameComponent("12px", "Nunito", "#fcf8f3", 100, 80, "popup");
+    this.createGameHtmlElements();
+  }
+
+  createGameHtmlElements() {
+    let gameContainer = document.getElementById('gameContainer');
+    gameContainer.insertBefore(this.canvas, gameContainer.children[0]);
+  }
+
+  getGameSave() {
+    return this.save;
   }
 
   start() {
-    let gameContainer = document.getElementById('gameContainer');
-    gameContainer.insertBefore(this.canvas, gameContainer.children[0]);
+    this.clear();
     this.enemyComponents = [];
     this.bonusScoreComponent = [];
     this.interval = setInterval(this.render.bind(this), 25);
