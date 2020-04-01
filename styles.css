@@ -191,7 +191,7 @@ canvas {
       Score Board
       ========================================================================== */
 .score-board {
-    margin: 20% auto;
+    margin: 26vh auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
