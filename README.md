@@ -1,4 +1,5 @@
-akzara_game
+## The Akzara Game
+[Demo link](https://dev-seahouse.github.io/akzara_game/)
 
 ### A minimalistic indie game to soothe restless souls in modern cities
 
@@ -18,3 +19,5 @@ akzara_game
 4. **Do not think about work whilst playing this game**
 6. **Do not think about work whilst playing this game**
 7. Go back to number 4.
+
+### Demo
