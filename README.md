@@ -1,5 +1,8 @@
 ## The Akzara Game
-[Demo link](https://dev-seahouse.github.io/akzara_game/)
+[Demo link](https://dev-seahouse.github.io/akzara_game/)  
+[!screenshot](https://cdn-std.droplr.net/files/acc_601720/4OKyTL)
+[!screenshot1](https://cdn-std.droplr.net/files/acc_601720/f10IVV)
+
 
 ### A minimalistic indie game to soothe restless souls in modern cities
 
